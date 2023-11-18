@@ -2,7 +2,6 @@ import { styled } from "..";
 
 export const HomeContainer = styled('main', {
   display: 'flex',
-  gap: '3rem',
   width: '100%',
   maxWidth: 'calc(100vw - ((100vw - 1180px) / 2))',
   marginLeft: 'auto',
@@ -16,7 +15,6 @@ export const ProductContainer = styled('a', {
 
   background: 'linear-gradient(180deg, #1ea483 0%, #7465d4 100%)',
   borderRadius: 8,
-  padding: '0.25rem',
   cursor: 'pointer',
   position: 'relative',
   overflow: 'hidden',
@@ -60,3 +58,32 @@ export const ProductContainer = styled('a', {
     }
   }
 })
+
+export const NavigationWrapper = styled('div', {
+  position: 'relative',
+})
+
+export const ArrowSVG = styled('svg', {
+  width: '30px',
+  height: '30px',
+  position: 'absolute',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  WebkitTransform: 'translateY(-50%)',
+  fill: '#fff',
+  cursor: 'pointer',
+
+  "&.arrow--left": {
+    left: "5px",
+  },
+
+  "&.arrow--right": {
+    left: "auto",
+    right: "5px",
+  },
+
+  "&.arrow--disabled": {
+    fill: "rgba(255, 255, 255, 0.5)",
+  }
+})
+
