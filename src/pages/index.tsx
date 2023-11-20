@@ -1,15 +1,23 @@
 import { MouseEvent, useState } from "react"
 import Image from "next/image"
+import { GetStaticProps } from "next"
+import Stripe from "stripe"
+import { stripe } from "@/lib/stripe"
+
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
-
 import { ArrowSVG, HomeContainer, NavigationWrapper, ProductContainer } from "@/styles/pages/home";
 
-import shirt1 from '@/assets/shirts/1.png'
-import shirt2 from '@/assets/shirts/2.png'
-import shirt3 from '@/assets/shirts/3.png'
+interface HomeProps {
+  products: {
+    id: string
+    name: string
+    imageUrl: string
+    price: number
+  }[]
+}
 
-export default function Home() {
+export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider({
@@ -31,57 +39,30 @@ export default function Home() {
     <>
       <NavigationWrapper>
         <HomeContainer ref={sliderRef} className="keen-slider">
-          <ProductContainer className="keen-slider__slide">
-            <Image src={shirt1} width={520} height={480} alt="" />
+          {products.map(product => {
+            return (
+              <ProductContainer key={product.id} className="keen-slider__slide">
+                <Image src={product.imageUrl} width={520} height={480} alt="" />
 
-            <footer>
-              <strong>Shirt X</strong>
-              <span>R$ 79,90</span>
-            </footer>
-          </ProductContainer>
-
-          <ProductContainer className="keen-slider__slide">
-            <Image src={shirt2} width={520} height={480} alt="" />
-
-            <footer>
-              <strong>Shirt X</strong>
-              <span>R$ 79,90</span>
-            </footer>
-          </ProductContainer>
-
-          <ProductContainer className="keen-slider__slide">
-            <Image src={shirt3} width={520} height={480} alt="" />
-
-            <footer>
-              <strong>Shirt X</strong>
-              <span>R$ 79,90</span>
-            </footer>
-          </ProductContainer>
-
-          <ProductContainer className="keen-slider__slide">
-            <Image src={shirt3} width={520} height={480} alt="" />
-
-            <footer>
-              <strong>Shirt X</strong>
-              <span>R$ 79,90</span>
-            </footer>
-          </ProductContainer>
+                <footer>
+                  <strong>{product.name}</strong>
+                  <span>{product.price}</span>
+                </footer>
+              </ProductContainer>
+            )
+          })}
         </HomeContainer>
 
         {loaded && instanceRef.current && (
           <>
             <Arrow
               isLeft
-              onClick={(e) =>
-                e.stopPropagation() || instanceRef.current?.prev()
-              }
+              onClick={() => instanceRef.current?.prev()}
               isDisabled={currentSlide === 0}
             />
 
             <Arrow
-              onClick={(e) =>
-                e.stopPropagation() || instanceRef.current?.next()
-              }
+              onClick={() => instanceRef.current?.next()}
               isDisabled={
                 currentSlide ===
                 instanceRef.current.track.details.slides.length - 1
@@ -94,20 +75,51 @@ export default function Home() {
   )
 }
 
+export const getStaticProps: GetStaticProps = async () => {
+  const response = await stripe.products.list({
+    expand: ['data.default_price']
+  })
+
+
+  const products = response.data.map(product => {
+    const price = product.default_price as Stripe.Price
+
+    return {
+      id: product.id,
+      name: product.name,
+      imageUrl: product.images[0],
+      price: price.unit_amount! / 100,
+    }
+  })
+
+  return {
+    props: {
+      products
+    }
+  }
+}
 
 type ArrowProps = {
   isDisabled?: boolean
   isLeft?: boolean
-  onClick?: (e: MouseEvent<SVGElement>) => void;
+  onClick?: () => void
 }
-
-
+// TODO: maybe move to a separate file
 function Arrow({ isDisabled, isLeft, onClick }: ArrowProps) {
   const disabledClass = isDisabled ? " arrow--disabled" : ""
 
+  const handleClick = (e: MouseEvent<SVGElement>) => {
+    if (e) {
+      e.stopPropagation()
+      if (onClick) {
+        onClick()
+      }
+    }
+  }
+
   return (
     <ArrowSVG
-      onClick={onClick}
+      onClick={handleClick}
       className={`arrow ${isLeft ? "arrow--left" : "arrow--right"
         } ${disabledClass}`}
       xmlns="http://www.w3.org/2000/svg"
