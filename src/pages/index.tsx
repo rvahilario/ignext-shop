@@ -1,5 +1,6 @@
 import { MouseEvent, useState } from "react"
 import { GetStaticProps } from "next"
+import Head from "next/head"
 import Image from "next/image"
 import Link from "next/link"
 import Stripe from "stripe"
@@ -7,6 +8,7 @@ import { stripe } from "@/lib/stripe"
 
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
+
 import { ArrowSVG, HomeContainer, NavigationWrapper, ProductContainer } from "@/styles/pages/home";
 
 type HomeProps = {
@@ -38,6 +40,10 @@ export default function Home({ products }: HomeProps) {
 
   return (
     <>
+      <Head>
+        <title>Home | Ignext Shop</title>
+      </Head>
+
       <NavigationWrapper>
         <HomeContainer ref={sliderRef} className="keen-slider">
           {products.map(product => {

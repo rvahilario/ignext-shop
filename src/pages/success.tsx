@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next"
 import Link from "next/link"
 import Image from "next/image"
+import Head from "next/head"
 import Stripe from "stripe"
 import { stripe } from "@/lib/stripe"
 
@@ -16,21 +17,29 @@ type SuccessProps = {
 
 export default function Success({ costumerName, product }: SuccessProps) {
   return (
-    <SuccessContainer>
-      <h1>Purchase made</h1>
+    <>
+      <Head>
+        <title>Purchase made | Ignext Shop</title>
 
-      <ImageContainer>
-        <Image src={product.imageUrl} width={120} height={110} alt="" />
-      </ImageContainer>
+        <meta name="robots" content="noindex" />
+      </Head>
 
-      <p>
-        Woohoo <strong>{costumerName}</strong>, your <strong>{product.name}</strong> is already on its way to your home.
-      </p>
+      <SuccessContainer>
+        <h1>Purchase made</h1>
 
-      <Link href="/">
-        Back to catalog
-      </Link>
-    </SuccessContainer>
+        <ImageContainer>
+          <Image src={product.imageUrl} width={120} height={110} alt="" style={{ width: 'auto', height: 'auto' }} priority />
+        </ImageContainer>
+
+        <p>
+          Woohoo <strong>{costumerName}</strong>, your <strong>{product.name}</strong> is already on its way to your home.
+        </p>
+
+        <Link href="/">
+          Back to catalog
+        </Link>
+      </SuccessContainer>
+    </>
   )
 }
 

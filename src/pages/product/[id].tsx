@@ -6,6 +6,7 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
 
 import { ProductContainer, ImageContainer, ProductDetails } from '@/src/styles/pages/product'
+import Head from 'next/head'
 
 type ProductProps = {
   product: {
@@ -40,20 +41,26 @@ export default function Product({ product }: ProductProps) {
   }
 
   return (
-    <ProductContainer>
-      <ImageContainer>
-        <Image src={product.imageUrl} width={520} height={480} alt="" />
-      </ImageContainer>
+    <>
+      <Head>
+        <title>{product.name} | Ignext Shop</title>
+      </Head>
 
-      <ProductDetails>
-        <h1>{product.name}</h1>
-        <span>{product.price}</span>
+      <ProductContainer>
+        <ImageContainer>
+          <Image src={product.imageUrl} width={520} height={480} alt="" style={{ width: 'auto', height: 'auto' }} priority />
+        </ImageContainer>
 
-        <p>{product.description}</p>
+        <ProductDetails>
+          <h1>{product.name}</h1>
+          <span>{product.price}</span>
 
-        <button onClick={handleBuyButton} disabled={isCreatingCheckoutSession}>Buy now</button>
-      </ProductDetails>
-    </ProductContainer>
+          <p>{product.description}</p>
+
+          <button onClick={handleBuyButton} disabled={isCreatingCheckoutSession}>Buy now</button>
+        </ProductDetails>
+      </ProductContainer>
+    </>
   )
 }
 
