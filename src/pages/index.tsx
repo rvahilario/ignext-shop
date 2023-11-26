@@ -24,16 +24,17 @@ export default function Home({ products }: HomeProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
   const [sliderRef, instanceRef] = useKeenSlider({
-    initial: 0,
     slideChanged(slider) {
       setCurrentSlide(slider.track.details.rel)
     },
     created() {
       setLoaded(true)
     },
-    mode: "free-snap",
+    loop: false,
+    mode: "free",
     slides: {
-      perView: 3,
+      origin: "center",
+      perView: 2.5,
       spacing: 48
     }
   })
@@ -50,7 +51,7 @@ export default function Home({ products }: HomeProps) {
             return (
               <Link href={`/product/${product.id}`} key={product.id} prefetch={false}>
                 <ProductContainer className="keen-slider__slide">
-                  <Image src={product.imageUrl} width={520} height={480} alt="" />
+                  <Image src={product.imageUrl} width={520} height={480} alt="" style={{ width: 'auto', height: 'auto' }} priority />
 
                   <footer>
                     <strong>{product.name}</strong>
