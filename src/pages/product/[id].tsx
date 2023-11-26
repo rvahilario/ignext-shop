@@ -12,10 +12,16 @@ type ProductProps = {
     imageUrl: string
     price: string
     description: string
+    defaultPriceId: string
   }
 }
 
 export default function Product({ product }: ProductProps) {
+  function handleBuyProduct() {
+    console.log('defaultPriceId', product.defaultPriceId)
+    // Create checkout session
+  }
+
   return (
     <ProductContainer>
       <ImageContainer>
@@ -28,13 +34,16 @@ export default function Product({ product }: ProductProps) {
 
         <p>{product.description}</p>
 
-        <button>Buy now</button>
+        <button onClick={handleBuyProduct}>Buy now</button>
       </ProductDetails>
     </ProductContainer>
   )
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  // Search most accessed products
+  // Improve changing fallback: "blocking" to true and creating a skeleton component to show while the page is loading
+
   return {
     paths: [{
       params: { id: 'prod_P2hhbYAGRukVw4' }
@@ -62,7 +71,8 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({ para
           style: 'currency',
           currency: 'BRL'
         }).format(price.unit_amount! / 100),
-        description: product.description
+        description: product.description,
+        defaultPriceId: price.id
       }
     },
     revalidate: 60 * 60 * 1 // 1 hours
