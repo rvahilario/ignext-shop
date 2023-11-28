@@ -1,5 +1,7 @@
+import { useContext } from "react"
 import { ImageContainer, ProductContainer } from "@/styles/components/ProductView"
 import Image from "next/image"
+import { PurchaseContext } from "../providers/Purchase"
 
 type ProductViewProps = {
   id: string
@@ -9,8 +11,10 @@ type ProductViewProps = {
 }
 
 export function ProductView({ id, name, imageUrl, price }: ProductViewProps) {
+  const { removeFromCart } = useContext(PurchaseContext)
+
   function handleRemoveFromCart() {
-    console.log('handleRemoveFromCart')
+    removeFromCart(id)
   }
 
   return (

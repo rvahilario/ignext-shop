@@ -26,7 +26,7 @@ type PurchaseContextProviderProps = {
   children: ReactNode
 }
 
-const LOCAL_STORAGE_KEY = '@ignite-shop/purchase/v0.02'
+const LOCAL_STORAGE_KEY = '@ignite-shop/purchase/v0.01'
 
 export function PurchaseProvider({
   children,
@@ -90,10 +90,6 @@ export function PurchaseProvider({
     const stateJSON = JSON.stringify(purchaseState)
 
     localStorage.setItem(LOCAL_STORAGE_KEY, stateJSON)
-  }, [purchaseState])
-
-  useEffect(() => {
-    console.log('purchaseState', purchaseState)
   }, [purchaseState])
 
   const { cartProducts, totalPrice, quantityItems } = purchaseState

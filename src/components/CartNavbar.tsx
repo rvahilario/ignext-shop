@@ -1,3 +1,4 @@
+import { useContext } from 'react'
 import {
   NavWrapper,
   HeaderContainer,
@@ -7,21 +8,18 @@ import {
 } from '@/styles/components/CartNavbar'
 import { X } from '@phosphor-icons/react'
 import { ProductView } from './ProductView'
+import { PurchaseContext } from '../providers/Purchase'
 
 type CartNavbarProps = {
   isShow: boolean
-  products: {
-    id: string
-    name: string
-    imageUrl: string
-    price: string
-  }[]
   handleClose: () => void
 }
 
-export function CartNavbar({ isShow, products, handleClose }: CartNavbarProps) {
+export function CartNavbar({ isShow, handleClose }: CartNavbarProps) {
+  const { cartProducts, buyProduct, totalPrice, quantityItems } = useContext(PurchaseContext)
+
   function handleBuyCart() {
-    console.log('handleBuyCart')
+    buyProduct()
   }
 
   return (
@@ -36,15 +34,16 @@ export function CartNavbar({ isShow, products, handleClose }: CartNavbarProps) {
         <h2>Shopping bag</h2>
 
         <ProductsContainer>
-          {products?.map((product) => (
-            <ProductView key={product?.id} {...product} />
-          ))}
+          {cartProducts?.map((product) => {
+            return <ProductView key={product?.id} {...product} />
+          }
+          )}
         </ProductsContainer>
 
         <InfoContainer>
           <div>
             <span>Quantity</span>
-            <span>{products?.length} {products?.length > 1 ? 'items' : 'item'}</span>
+            <span>{quantityItems} {quantityItems !== 1 ? 'items' : 'item'}</span>
           </div>
 
           <div>
@@ -53,7 +52,7 @@ export function CartNavbar({ isShow, products, handleClose }: CartNavbarProps) {
               {new Intl.NumberFormat('pt-BR', {
                 style: 'currency',
                 currency: 'BRL',
-              }).format(369.7)}
+              }).format(totalPrice)}
             </strong>
           </div>
         </InfoContainer>

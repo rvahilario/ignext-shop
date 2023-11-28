@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
+import React, { useState, useContext } from 'react'
 import Stripe from 'stripe'
 import { stripe } from '@/src/lib/stripe'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Image from 'next/image'
+import { PurchaseContext } from '@/src/providers/Purchase'
 
 import { ProductContainer, ImageContainer, ProductDetails } from '@/src/styles/pages/product'
 import Head from 'next/head'
@@ -20,24 +20,11 @@ type ProductProps = {
 }
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false);
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] = useState(false)
+  const { addToCart } = useContext(PurchaseContext)
 
-  async function handleBuyButton() {
-    try {
-      setIsCreatingCheckoutSession(true);
-
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      })
-
-      const { checkoutUrl } = response.data;
-
-      window.location.href = checkoutUrl;
-    } catch (err) {
-      setIsCreatingCheckoutSession(false);
-
-      alert('Failed to redirect to checkout!')
-    }
+  async function handleAddToCart() {
+    addToCart(product)
   }
 
   return (
@@ -57,7 +44,7 @@ export default function Product({ product }: ProductProps) {
 
           <p>{product.description}</p>
 
-          <button onClick={handleBuyButton} disabled={isCreatingCheckoutSession}>Buy now</button>
+          <button onClick={handleAddToCart} disabled={isCreatingCheckoutSession}>Add to Cart</button>
         </ProductDetails>
       </ProductContainer>
     </>

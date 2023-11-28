@@ -9,7 +9,7 @@ import { stripe } from "@/lib/stripe"
 import 'keen-slider/keen-slider.min.css'
 import { useKeenSlider } from 'keen-slider/react'
 
-import { ArrowSVG, HomeContainer, NavigationWrapper, ProductContainer } from "@/styles/pages/home";
+import { ArrowSVG, HomeContainer, NavigationWrapper, ProductContainer } from "@/styles/pages/home"
 
 type HomeProps = {
   products: {
