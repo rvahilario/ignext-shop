@@ -122,7 +122,7 @@ type ArrowProps = {
 function Arrow({ isDisabled, isLeft, onClick }: ArrowProps) {
   const disabledClass = isDisabled ? " arrow--disabled" : ""
 
-  const handleClick = (e: MouseEvent<SVGElement>) => {
+  function handleClick(e: MouseEvent<SVGElement>) {
     if (e) {
       e.stopPropagation()
       if (onClick) {

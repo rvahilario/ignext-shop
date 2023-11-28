@@ -21,7 +21,7 @@ export function Header() {
         <span>{5}</span>
       </button>
 
-      <CartNavbar isShow={showCartNav} products={[]} handleClose={handleOpenCloseCartNav} />
+      <CartNavbar isShow={showCartNav} handleClose={handleOpenCloseCartNav} />
     </HeaderContainer>
   )
 }
